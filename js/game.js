@@ -23,3 +23,26 @@ function computerPlay() {
 // computer_selection holds the random choices result
 const computer_selection = computerPlay();
 
+
+/**
+ * Prompts the user to give a choise of "Rock", "Paper", or "Scissors".
+ * The function uses prompt() to gather user input and force title case afterwords.
+ * Then it returns the input as a string.
+ * 
+ * @returns {string} User input choices of "Rock", "Paper", or "Scissors".
+ */
+function player_play() {
+
+    // Asks for input from user
+    let userInput = prompt("Please input either rock, paper or scissors: ");
+
+    // Forces lower case, then title case
+    userInput = userInput.toLowerCase();
+    userInput = userInput.replace(userInput[0], userInput[0].toUpperCase());
+
+    // return the user input
+    return userInput;
+}
+
+// playerSelection holds the user input result
+const playerSelection = player_play();
