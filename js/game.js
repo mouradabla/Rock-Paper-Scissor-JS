@@ -23,18 +23,18 @@ function computerPlay() {
 // computer_selection holds the random choices result
 const computer_selection = computerPlay();
 
-let roundWinner = function (player_selection, computer_selection){
-    if (player_selection===`Rock` && computer_selection===`Paper`){
+let round_winner = function (playerSelection, computer_selection){
+    if (playerSelection===`Rock` && computer_selection===`Paper`){
             return `Computer`;
-        }else if (player_selection===`Rock` && computer_selection===`Scissors`){
+        }else if (playerSelection===`Rock` && computer_selection===`Scissors`){
             return `Player`;
-        }else if (player_selection===`Scissors` && computer_selection===`Rock`){
+        }else if (playerSelection===`Scissors` && computer_selection===`Rock`){
             return `Computer`;
-        }else if (player_selection===`Scissors` && computer_selection===`Paper`){
+        }else if (playerSelection===`Scissors` && computer_selection===`Paper`){
             return `Player`;
-        }else if (player_selection===`Paper` && computer_selection===`Scissors`){
+        }else if (playerSelection===`Paper` && computer_selection===`Scissors`){
             return `Computer`;
-        }else if (player_selection===`Paper` && computer_selection===`Rock`){
+        }else if (playerSelection===`Paper` && computer_selection===`Rock`){
             return `Player`;
         }else {
             return `Tie`;
