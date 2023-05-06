@@ -31,13 +31,13 @@ function computer_play() {
  * @param {string} message - The prompt message to display to the player. Defaults to 'Please enter "Rock", "Paper" or "Scissors": '.
  * @returns {string|undefined} - The validated player's choice of "Rock", "Paper", or "Scissors" with the first letter capitalized, or "Exit" if the player cancels or enters an empty value.
 */
-function player_play(message = 'Please enter "Rock", "Paper" or "Scissors": ') {
+function player_play(message = 'Hey there, Player! To start, please enter "Rock", "Paper" or "Scissors": ') {
 
     // Prompt the player for their input
     let userInput = prompt(message);
 
     // Check if player cancelled or entered an empty value
-    if (userInput === null || userInput === "") {
+    if(userInput === null || userInput === "") {
         return "Exit";
     }
 
@@ -46,7 +46,7 @@ function player_play(message = 'Please enter "Rock", "Paper" or "Scissors": ') {
     userInput = userInput.replace(userInput[0], userInput[0].toUpperCase());
 
     // Check if player's input is invalid
-    while (!CHOICES.includes(userInput)) {
+    while(!CHOICES.includes(userInput)) {
         // Prompt the player again for a valid input
         userInput = prompt(`Invalid choice! Please enter "Rock", "Paper", or "Scissors"`);
 
@@ -69,12 +69,12 @@ function player_play(message = 'Please enter "Rock", "Paper" or "Scissors": ') {
 function play_round(playerSelection, computerSelection) {
 
     // Check if the player and computer selections are the same then it's a tie
-    if (playerSelection === computerSelection) {
+    if(playerSelection === computerSelection) {
 
         console.log(`It's a Tie! ${playerSelection} V.S ${computerSelection}`);
 
         // Check if the player wins by comparing their selection with the computer's selection
-    } else if (playerSelection === "Rock" && computerSelection === "Scissors" ||
+    } else if(playerSelection === "Rock" && computerSelection === "Scissors" ||
         playerSelection === "Paper" && computerSelection === "Rock" ||
         playerSelection === "Scissors" && computerSelection === "Paper") {
 
@@ -101,7 +101,7 @@ function play_round(playerSelection, computerSelection) {
 function game() {
 
     // Loop until the player wins the specified number of rounds
-    while (playerWins < WINING_SCORE) {
+    while(playerWins < WINING_SCORE) {
 
         // Get the computer's selection
         const computerSelection = computer_play();
@@ -110,7 +110,7 @@ function game() {
         const playerSelection = player_play();
 
         // If the player does not choose to exit the game
-        if (playerSelection !== "Exit") {
+        if(playerSelection !== "Exit") {
 
             // Play a round of the game with the player and computer selections
             play_round(playerSelection, computerSelection);
