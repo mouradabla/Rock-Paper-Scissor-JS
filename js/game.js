@@ -20,9 +20,7 @@ function computer_play() {
 }
 
 /**
- * Prompts the user to give a choise of "Rock", "Paper", or "Scissors".
- * The function uses prompt() to gather user input and force title case afterwords.
- * Then it returns the input as a string.
+ * Prompts the player to enter their choice of "Rock", "Paper", or "Scissors" and validates their input.
  * 
  * @returns {string} User input choices of "Rock", "Paper", or "Scissors".
  */
