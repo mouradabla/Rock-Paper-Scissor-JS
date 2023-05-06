@@ -36,10 +36,14 @@ function player_play(message = 'Please enter "Rock", "Paper" or "Scissors": ') {
     // Prompt the player for their input
     let userInput = prompt(message);
 
-    // Check if player cancelled or entered an empty value
-    if (userInput === null || userInput === "") {
-        return "Exit";
-    }
+    // If user input is not empty value 
+    if (userInput == "") {
+        userInput = "Wrong";
+        // Check if player cancelled
+    } else
+        if (userInput === null) {
+            return "Exit";
+        }
 
     // Convert the player's input to lowercase and capitalize the first letter
     userInput = userInput.toLocaleLowerCase();
@@ -49,6 +53,15 @@ function player_play(message = 'Please enter "Rock", "Paper" or "Scissors": ') {
     while (!CHOICES.includes(userInput)) {
         // Prompt the player again for a valid input
         userInput = prompt(`Invalid choice! Please enter "Rock", "Paper", or "Scissors"`);
+
+        // If user input is not empty value 
+        if (userInput == "") {
+            userInput = "Wrong";
+            // Check if player cancelled
+        } else if (userInput === null) {
+            userInput = "Exit";
+            break;
+        }
 
         userInput = userInput.toLocaleLowerCase();
         userInput = userInput.replace(userInput[0], userInput[0].toUpperCase());
