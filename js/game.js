@@ -34,7 +34,7 @@ function player_play() {
 
         // Force lower case
         try {
-            playerSelection = userInput.toLowerCase();
+            playerSelection = userInput.trim().toLowerCase();
         }
         catch (TypeError) {
             // Handle cancel button error
@@ -119,6 +119,8 @@ The computer will choose an option and after 5 rounds, the winner is the one wit
     // run 5 rounds and count points
     let winner;
     for (let i = 0; i < 5; i++) {
+        console.log("Round " + (i + 1))
+        
         winner = play_round(player_play(), computer_play());
         
         switch (winner) {
