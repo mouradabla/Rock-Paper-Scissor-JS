@@ -1,11 +1,6 @@
-// Define an array of valid choices for the game.
-const CHOICES = [`Rock`, `Paper`, `Scissors`];
-
-// Initialize a counter for the number of wins the player has.
-let playerWins = 0;
-
-// Define the number of wins required to win the game.
-const WINING_SCORE = 5;
+/* Define changable global variables */
+let choices = ["Rock", "Paper", "Scissors"];
+let inputText = "Please input either rock, paper or scissors: "
 
 /**
  * Returns a randomly generated choices of 'Rock', 'Paper', or 'Scissors'.
@@ -17,131 +12,197 @@ const WINING_SCORE = 5;
  * @returns {string} A randomly generated choices of 'Rock', 'Paper', or 'Scissors'.
  */
 function computer_play() {
-
     // random number between 0 and 2
-    const randomIndex = Math.floor(Math.random() * CHOICES.length);
+    const randomIndex = Math.floor(Math.random() * choices.length);
 
     // return the random choice from the array choices
-    return CHOICES[randomIndex];
+    return choices[randomIndex];
 }
 
 /**
  * Prompts the player to enter their choice of "Rock", "Paper", or "Scissors" and validates their input.
  * 
- * @param {string} message - The prompt message to display to the player. Defaults to 'Please enter "Rock", "Paper" or "Scissors": '.
- * @returns {string|undefined} - The validated player's choice of "Rock", "Paper", or "Scissors" with the first letter capitalized, or "Exit" if the player cancels or enters an empty value.
-*/
-function player_play(message = 'Please enter "Rock", "Paper" or "Scissors": ') {
+ * @returns {string} User input choices of "Rock", "Paper", or "Scissors".
+ */
+function player_play() {
+    let userInput = false;
+    let playerSelection;
+        
+    // Asks for input from user until valid input is given
+    while (userInput == false) {
+        userInput = prompt(inputText);
 
-    // Prompt the player for their input
-    let userInput = prompt(message);
-
-    // If user input is not empty value 
-    if (userInput == "") {
-        userInput = "Wrong";
-        // Check if player cancelled
-    } else
-        if (userInput === null) {
-            return "Exit";
+        // Force lower case
+        try {
+            playerSelection = userInput.toLowerCase();
         }
-
-    // Convert the player's input to lowercase and capitalize the first letter
-    userInput = userInput.toLocaleLowerCase();
-    userInput = userInput.replace(userInput[0], userInput[0].toUpperCase());
-
-    // Check if player's input is invalid
-    while (!CHOICES.includes(userInput)) {
-        // Prompt the player again for a valid input
-        userInput = prompt(`Invalid choice! Please enter "Rock", "Paper", or "Scissors"`);
-
-        // If user input is not empty value 
-        if (userInput == "") {
-            userInput = "Wrong";
-            // Check if player cancelled
-        } else if (userInput === null) {
-            userInput = "Exit";
-            break;
+        catch (TypeError) {
+            // Handle cancel button error
+            playerSelection = "exit";
         }
-
-        userInput = userInput.toLocaleLowerCase();
-        userInput = userInput.replace(userInput[0], userInput[0].toUpperCase());
+        
+        // Forces title case
+        if (playerSelection != "") {
+            playerSelection = playerSelection.replace(playerSelection[0], playerSelection[0].toUpperCase());
+        }
+        
+        // Enable easter egg
+        if (["Lizard", "Spock"].includes(playerSelection) && choices.length == 3) {upgrade();}
+        
+        // Handle invalid user inputs
+        if (!choices.includes(playerSelection) && playerSelection != "Exit") {
+            console.log(`'${userInput}' is an invalid input. ` + inputText);
+            userInput = false;
+        }
     }
-
-    // Return the validated player's choice
-    return userInput;
+    
+    // return the user input
+    return playerSelection;
 }
 
 /**
- * Plays a single round of the rock-paper-scissors game and prints the result to the console.
+ * Take input from player_input and computer_input.
+ * Then determin the winner between the two and return winner.
+ * 
+ * @param playerSelection {string} User input choices of "Rock", "Paper", or "Scissors".
+ * @param computerSelection {string} Random choices of "Rock", "Paper", or "Scissors".
  *
- * @param {string} playerSelection - The player's choice of "Rock", "Paper", or "Scissors".
- * @param {string} computerSelection - The computer's randomly generated choice of "Rock", "Paper", or "Scissors".
- *
- * @returns {undefined} This function does not return anything.
+ * @returns {string} Winner of round
  */
 function play_round(playerSelection, computerSelection) {
-
-    // Check if the player and computer selections are the same then it's a tie
-    if (playerSelection === computerSelection) {
-
-        console.log(`It's a Tie! ${playerSelection} V.S ${computerSelection}`);
-
-        // Check if the player wins by comparing their selection with the computer's selection
-    } else if (playerSelection === "Rock" && computerSelection === "Scissors" ||
-        playerSelection === "Paper" && computerSelection === "Rock" ||
-        playerSelection === "Scissors" && computerSelection === "Paper") {
-
-        console.log(`You Win! ${playerSelection} beats ${computerSelection}`);
-
-        // Increment the player's win count and log the result
-        playerWins++;
-        console.log(`Your score: ${playerWins} wins!`);
-
-        // The player loses if none of the above conditions are met
-    } else {
-        console.log(`You Lose! ${computerSelection} beats ${playerSelection}`);
+    // Exit function if exit is given
+    if (playerSelection == "Exit") {return playerSelection;}
+    
+    // Turn inputs into numbers
+    let computerNumber = choices.indexOf(computerSelection)
+    let playerNumber = choices.indexOf(playerSelection)
+    
+    // Create outcome texts
+    let playerWinText = `Congrats, you won! ${playerSelection} beates ${computerSelection}.`;
+    let playerLoseText = `Too bad, you lost! ${computerSelection} beates ${playerSelection}.`;
+    let playerTieText = `Ohh, its a tie! ${computerSelection} is the same as ${playerSelection}.`;
+    
+    /* Calculate winner aritmetically and return results */
+    if (playerNumber == computerNumber) {
+        console.log(playerTieText);
+        return "both";
+    }
+    else if (playerNumber % 2 - computerNumber % 2 == 0 && playerNumber < computerNumber ||
+             playerNumber % 2 - computerNumber % 2 != 0 && playerNumber > computerNumber) {
+        console.log(playerWinText);
+        return "player";
+    }
+    else if (playerNumber % 2 - computerNumber % 2 == 0 && playerNumber > computerNumber ||
+             playerNumber % 2 - computerNumber % 2 != 0 && playerNumber < computerNumber) {
+        console.log(playerLoseText);
+        return "computer";
+    }
+    else {
+        console.log("Something went wrong!")
+        return "both";
     }
 }
 
 /**
- * This function runs the Rock, Paper, Scissors game until the player wins the specified number of rounds.
- * It uses a while loop to repeatedly call the player_play() and computer_play() functions and pass their
- * results to the play_round() function until the player has won the specified number of rounds or chooses
- * to exit the game.
+ * Main function to run game and determine winner of game.
  *
- * @return {undefined}
+ * @returns {number} Zero if exiting correctly
  */
 function game() {
-
-    // Loop until the player wins the specified number of rounds
-    while (playerWins < WINING_SCORE) {
-
-        // Get the computer's selection
-        const computerSelection = computer_play();
-
-        // Get the player's selection
-        const playerSelection = player_play();
-
-        // If the player does not choose to exit the game
-        if (playerSelection !== "Exit") {
-
-            // Play a round of the game with the player and computer selections
-            play_round(playerSelection, computerSelection);
-
-            // If the player chooses to exit the game
-        } else {
-
-            // Display the player's final score
-            console.log(`Game will stop now! Your score is: ${playerWins}`)
-
-            // Prompt the player to refresh the page to play again
-            console.log("Please refresh the page to play again!")
-
-            // Exit the while loop
-            break;
+    const exitMessage = "Exiting..."
+    let playerScore = 0;
+    let computerScore = 0;
+    
+    console.log(`The game has begun!\nChoose either Rock, Paper or Scissors in the input window.
+The computer will choose an option and after 5 rounds, the winner is the one with the most points.`);
+    
+    // run 5 rounds and count points
+    let winner;
+    for (let i = 0; i < 5; i++) {
+        winner = play_round(player_play(), computer_play());
+        
+        switch (winner) {
+            case "Exit":
+                console.log(exitMessage);
+                return 0;
+                break;
+            case "player":
+                playerScore += 1;
+                break;
+            case "computer":
+                computerScore += 1;
+                break;
+            case "both":
+                break;
+            default:
+                console.log("Something went wrong!");
         }
     }
+    
+    // Determine winner of game
+    if (playerScore == computerScore) {
+        console.log("Its a tie! Your score is " + playerScore + ". Computers score is " + computerScore);
+        console.log("Starting another round for you!");
+        downgrad();
+        return game();
+    }
+    else if (playerScore > computerScore) {
+        console.log("You won! Your score is " + playerScore + ". Computers score is " + computerScore);
+    }
+    else if (playerScore < computerScore) {
+        console.log("You lost! Your score is " + playerScore + ". Computers score is " + computerScore);
+    }
+    else {
+        console.log("Something went wrong =(!");
+    }
+    
+    // Checking if user wants another round
+    let userInput = false;
+    while (userInput == false) {
+        try {
+            userInput = prompt("Do you want to start another round? Yes or No: ").toLowerCase();
+        }
+        catch (TypeError) {
+            console.log("If you want to exit in the future, just input no.");
+            console.log(exitMessage);
+            return 0;
+        }
+        
+        switch (userInput) {
+            case "yes":
+                if (choices.length > 3) {
+                    downgrade();
+                }
+                game();
+                break;
+            case "no":
+                console.log(exitMessage);
+                break;
+            default:
+                console.log("Invalid input! Please choose either Yes or No");
+                user_input = false;
+        }
+    }
+    
+    return 0;
 }
 
-// Trigger the game function to start playing the game.
-game();
+/**
+ * Simple function to enable the easter egg mode.
+ */
+function upgrade() {
+    choices.push("Spock", "Lizard");
+    inputText = `${inputText.slice(0, -14)}, ${inputText.slice(-10, -3)}, lizard or spock ;) : `
+    console.log("Oh, so you want to be funny? Then lets be funny!");
+}
+
+/**
+ * Simple function to remove the easter egg mode.
+ */
+function downgrade() {
+    choices.pop();
+    choices.pop();
+    inputText = "Please input either rock, paper or scissors: ";
+}
+
+game(); // Starts game if file is loaded
