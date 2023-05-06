@@ -1,6 +1,7 @@
 /* Define changable global variables */
 let choices = ["Rock", "Paper", "Scissors"];
 let inputText = "Please input either rock, paper or scissors: "
+const EXITMESSAGE = "Exiting..."
 
 /**
  * Returns a randomly generated choices of 'Rock', 'Paper', or 'Scissors'.
@@ -104,12 +105,11 @@ function play_round(playerSelection, computerSelection) {
 }
 
 /**
- * Main function to run game and determine winner of game.
+ * Function to run a five round game.
  *
- * @returns {number} Zero if exiting correctly
+ * @returns {array|string} Player and computer scores or 'Exit' if user wants to exit
  */
 function game() {
-    const exitMessage = "Exiting..."
     let playerScore = 0;
     let computerScore = 0;
     
@@ -125,8 +125,8 @@ The computer will choose an option and after 5 rounds, the winner is the one wit
         
         switch (winner) {
             case "Exit":
-                console.log(exitMessage);
-                return 0;
+                console.log(EXITMESSAGE);
+                return "Exit";
                 break;
             case "player":
                 playerScore += 1;
@@ -140,13 +140,21 @@ The computer will choose an option and after 5 rounds, the winner is the one wit
                 console.log("Something went wrong!");
         }
     }
-    
+    return [playerScore, computerScore];
+}
+
+/**
+ * Determines the winner and tells player in the console
+ *
+ * @returns Zero if exiting from a tie, else one
+ */
+function determin_winner(playerScore, computerScore) {
     // Determine winner of game
     if (playerScore == computerScore) {
         console.log("Its a tie! Your score is " + playerScore + ". Computers score is " + computerScore);
         console.log("Starting another round for you!");
-        downgrad();
-        return game();
+        downgrade();
+        return run_program();
     }
     else if (playerScore > computerScore) {
         console.log("You won! Your score is " + playerScore + ". Computers score is " + computerScore);
@@ -158,15 +166,23 @@ The computer will choose an option and after 5 rounds, the winner is the one wit
         console.log("Something went wrong =(!");
     }
     
+    return 1;
+}
+
+/**
+ * Prompts the user if they want an new game or not
+ *
+ */
+function ask_new_game() {
     // Checking if user wants another round
     let userInput = false;
     while (userInput == false) {
         try {
-            userInput = prompt("Do you want to start another round? Yes or No: ").toLowerCase();
+            userInput = prompt("Do you want to start another round? Yes or No: ").trim().toLowerCase();
         }
         catch (TypeError) {
             console.log("If you want to exit in the future, just input no.");
-            console.log(exitMessage);
+            console.log(EXITMESSAGE);
             return 0;
         }
         
@@ -175,18 +191,40 @@ The computer will choose an option and after 5 rounds, the winner is the one wit
                 if (choices.length > 3) {
                     downgrade();
                 }
-                game();
+                run_program();
                 break;
             case "no":
-                console.log(exitMessage);
+                console.log(EXITMESSAGE);
                 break;
             default:
-                console.log("Invalid input! Please choose either Yes or No");
-                user_input = false;
+                console.log("'" + userInput + "' is an invalid input! Please choose either Yes or No");
+                userInput = false;
         }
     }
+}
+
+/**
+ * Runs the program by calling game, then determining winner by calling determin_winner and
+ * ask if user wants another round by calling ask_new_round
+ *
+ * @returns {number} Zero if run correctly
+ */
+function run_program() {
+    // Run a game
+    let scores = game();
     
-    return 0;
+    // Check for exit
+    if (scores == "Exit") {return 0;}
+    
+    // Determin winner
+    let exitVariable = determin_winner(scores[0], scores[1]);
+    
+    if (exitVariable == 0) {return 0;}
+    
+    // Ask user if they want another round
+    ask_new_game();
+    
+    return 0; // Exit program
 }
 
 /**
@@ -207,4 +245,4 @@ function downgrade() {
     inputText = "Please input either rock, paper or scissors: ";
 }
 
-game(); // Starts game if file is loaded
+run_program(); // Runs program if file is loaded
